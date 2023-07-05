@@ -28,6 +28,42 @@ async function fetch(pageno = 1, pagesize = 10) {
         console.log(err)
         return null;
     }
-
 }
 
+function printContacts(contacts) {
+    const $parent = $('#tbody');
+    for (c of contacts) {
+        const html = `
+        <tr>
+          <td>${c.no}</td>
+          <td><a href='read.html?no=${c.no}'>${c.name}</a></td>
+          <td>${c.tel}</td>
+          <td>${c.address}</td>
+        </tr>
+      `;
+        $parent.append(html);
+    }
+}
+
+
+// pagination에 필요한 prev, start, end, next, pageno를 리턴하는 함수
+
+// getPagination(result) → result에서 pageno, pagesize, totalcount를 꺼내는 문법
+// 구조분해할당
+function getPagination({ pageno, pagesize, totalcount, blockSize = 5 }) {
+    // 페이지의 개수 계산
+    const countOfPage = Math.ceil(totalcount / pagesize);
+
+    // prev, start, end, next를 계산한 다음 목록의 끝에 도달할 경우 end, next를 변경
+    const prev = Math.floor((pageno - 1) / blockSize) * blockSize;
+    const start = prev + 1;
+    let end = prev + blockSize;
+    let next = end + 1;
+    if (end >= countOfPage) {
+        end = countOfPage;
+        next = 0;
+    }
+    // 구조분해할당 : 객체 → 변수로 분해, 변수를 모아서 객체를 생성
+    // return {prev:prev, start:start, end:end, next:next, pageno:pageno};
+    return { prev, start, end, next, pageno };
+}
