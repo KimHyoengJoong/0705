@@ -67,3 +67,35 @@ function getPagination({ pageno, pagesize, totalcount, blockSize = 5 }) {
     // return {prev:prev, start:start, end:end, next:next, pageno:pageno};
     return { prev, start, end, next, pageno };
 }
+
+function printPagination({ prev, start, end, next, pageno }) {
+    const $parent = $('#pagination');
+    if (prev > 0) {
+        const html = `
+        <li class="page-item">
+            <a href="list.html?pageno=${prev}" class="page-link">이전으로</a>
+        </li>
+        `;
+        $parent.append(html);
+    }
+
+    for (let i = start; i <= end; i++) {
+        let classname = 'page-item';
+        if (i === pageno)
+            classname = 'page-item active'
+        const html = `
+        <li class="${classname}">
+            <a href="list.html?pageno=${i}" class="page-link">${i}</a>
+        </li>
+        `;
+        $parent.append(html);
+    }
+    if (next > 0) {
+        const html = `
+        <li class="page-item">
+            <a href="list.html?pageno=${next}" class="page-link">다음으로</a>
+        </li>
+        `;
+        $parent.append(html);
+    }
+}
